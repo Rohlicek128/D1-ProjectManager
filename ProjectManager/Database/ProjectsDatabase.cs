@@ -21,6 +21,7 @@ public class ProjectsDatabase
     private ProjectsDatabase()
     {
         _connectionString = GetConnectionString();
+        Console.WriteLine(_connectionString);
         Connection = GetConnection()!;
     }
 

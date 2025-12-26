@@ -1,4 +1,6 @@
 using ProjectManager.Database;
+using ProjectManager.Database.Tables;
+using ProjectManager.Interface;
 
 namespace ProjectManager;
 
@@ -7,10 +9,14 @@ static class Program
     [STAThread]
     private static void Main()
     {
-        var db = ProjectsDatabase.Instance;
+        //Projects.Create("Tester", "Some desc...");
+        foreach (var project in Projects.List())
+        {
+            Console.WriteLine("{0}, {1}, {2}", project.Title, project.Description, project.CreatedDate);
+        }
         
-        // see https://aka.ms/applicationconfiguration.
+        
         ApplicationConfiguration.Initialize();
-        Application.Run(new Form1());
+        Application.Run(new Window());
     }
 }
