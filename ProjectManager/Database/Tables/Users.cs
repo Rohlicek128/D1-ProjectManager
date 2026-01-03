@@ -2,103 +2,103 @@
 
 namespace ProjectManager.Database.Tables;
 
-public struct Project(string title, string desc, DateTime? createdDate = null, int id = -1)
+public struct User(string username, string email, DateTime? createdDate = null, int id = -1)
 {
     public int Id = id;
-    public string Title = title;
-    public string Description = desc;
+    public string Username = username;
+    public string Email = email;
     public DateTime CreatedDate = createdDate ?? DateTime.Now;
 }
 
-public static class Projects
+public static class Users
 {
-    public static bool Create(Project project)
+    public static bool Create(User user)
     {
         try
         {
             var conn = ProjectsDatabase.Instance.Connection;
 
             using var command = new SqlCommand(
-                $"insert into Projects(title, description) values(\'{project.Title}\', \'{project.Description}\')",
+                $"insert into Users(username, email) values('{user.Username}', '{user.Email}')",
                 conn
             );
 
             var addedRows = command.ExecuteNonQuery();
             if (addedRows > 0)
             {
-                Console.WriteLine("[DATABASE]:Projects:Create INSERTED");
+                Console.WriteLine("[DATABASE]:Users:Create INSERTED");
             }
-            
+
             return addedRows > 0;
         }
         catch (Exception e)
         {
-            Console.WriteLine("[DATABASE]:Projects:Create ERROR: " + e.Message);
+            Console.WriteLine("[DATABASE]:Users:Create ERROR: " + e.Message);
             return false;
         }
     }
 
-    public static void Update(Project project)
+    public static void Update(User user)
     {
         try
         {
             var conn = ProjectsDatabase.Instance.Connection;
 
             using var command = new SqlCommand(
-                $"update Projects set title = '{project.Title}', description = '{project.Description}' where id = '{project.Id}'",
+                $"update Users set username = '{user.Username}', email = '{user.Email}' where id = {user.Id}",
                 conn
             );
 
             var updatedRows = command.ExecuteNonQuery();
             if (updatedRows > 0)
             {
-                Console.WriteLine("[DATABASE]:Projects:Update UPDATED");
+                Console.WriteLine("[DATABASE]:Users:Update UPDATED");
             }
         }
         catch (Exception e)
         {
-            Console.WriteLine("[DATABASE]:Projects:Update ERROR: " + e.Message);
+            Console.WriteLine("[DATABASE]:Users:Update ERROR: " + e.Message);
         }
     }
-    
-    public static void Delete(Project project)
+
+    public static void Delete(User user)
     {
         try
         {
             var conn = ProjectsDatabase.Instance.Connection;
 
             using var command = new SqlCommand(
-                $"delete from Projects where id = '{project.Id}'",
+                $"delete from Users where id = {user.Id}",
                 conn
             );
 
             var deletedRows = command.ExecuteNonQuery();
             if (deletedRows > 0)
             {
-                Console.WriteLine("[DATABASE]:Projects:Delete DELETED");
+                Console.WriteLine("[DATABASE]:Users:Delete DELETED");
             }
         }
         catch (Exception e)
         {
-            Console.WriteLine("[DATABASE]:Projects:Delete ERROR: " + e.Message);
+            Console.WriteLine("[DATABASE]:Users:Delete ERROR: " + e.Message);
         }
     }
-    
-    public static Project? FindById(int id)
+
+    public static User? FindById(int id)
     {
         try
         {
             var conn = ProjectsDatabase.Instance.Connection;
 
             using var command = new SqlCommand(
-                $"select id, title, description, created_date from Projects where id = '{id}'",
+                $"select id, username, email, created_date from Users where id = {id}",
                 conn
             );
 
             using var reader = command.ExecuteReader();
             if (reader.Read())
             {
-                return new Project(
+                return new User(
                     reader.GetString(1),
                     reader.GetString(2),
                     reader.GetDateTime(3),
@@ -108,27 +108,27 @@ public static class Projects
         }
         catch (Exception e)
         {
-            Console.WriteLine("[DATABASE]:Projects:FindByTitle ERROR: " + e.Message);
+            Console.WriteLine("[DATABASE]:Users:FindById ERROR: " + e.Message);
         }
 
         return null;
     }
 
-    public static Project? FindByTitle(string title)
+    public static User? FindByUsername(string username)
     {
         try
         {
             var conn = ProjectsDatabase.Instance.Connection;
 
             using var command = new SqlCommand(
-                $"select id, title, description, created_date from Projects where title = '{title}'",
+                $"select id, username, email, created_date from Users where username = '{username}'",
                 conn
             );
 
             using var reader = command.ExecuteReader();
             if (reader.Read())
             {
-                return new Project(
+                return new User(
                     reader.GetString(1),
                     reader.GetString(2),
                     reader.GetDateTime(3),
@@ -138,41 +138,41 @@ public static class Projects
         }
         catch (Exception e)
         {
-            Console.WriteLine("[DATABASE]:Projects:FindByTitle ERROR: " + e.Message);
+            Console.WriteLine("[DATABASE]:Users:FindByUsername ERROR: " + e.Message);
         }
 
         return null;
     }
 
-    public static List<Project> List()
+    public static List<User> List()
     {
         try
         {
             var conn = ProjectsDatabase.Instance.Connection;
 
             using var command = new SqlCommand(
-                "select p.id, p.title, p.description, p.created_date from Projects p",
+                "select id, username, email, created_date from Users",
                 conn
             );
 
-            var reader = command.ExecuteReader();
+            using var reader = command.ExecuteReader();
+            var result = new List<User>();
 
-            var result = new List<Project>();
             while (reader.Read())
             {
-                result.Add(new Project(
+                result.Add(new User(
                     reader.GetString(1),
                     reader.GetString(2),
                     reader.GetDateTime(3),
                     reader.GetInt32(0)
                 ));
             }
-            
+
             return result;
         }
         catch (Exception e)
         {
-            Console.WriteLine("[DATABASE]:Projects:List ERROR: " + e.Message);
+            Console.WriteLine("[DATABASE]:Users:List ERROR: " + e.Message);
             return [];
         }
     }

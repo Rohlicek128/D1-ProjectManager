@@ -2,177 +2,169 @@
 
 namespace ProjectManager.Database.Tables;
 
-public struct Project(string title, string desc, DateTime? createdDate = null, int id = -1)
+public struct Role(string name, int id = -1)
 {
     public int Id = id;
-    public string Title = title;
-    public string Description = desc;
-    public DateTime CreatedDate = createdDate ?? DateTime.Now;
+    public string Name = name;
 }
 
-public static class Projects
+public static class Roles
 {
-    public static bool Create(Project project)
+    public static bool Create(Role role)
     {
         try
         {
             var conn = ProjectsDatabase.Instance.Connection;
 
             using var command = new SqlCommand(
-                $"insert into Projects(title, description) values(\'{project.Title}\', \'{project.Description}\')",
+                $"insert into Roles(name) values('{role.Name}')",
                 conn
             );
 
             var addedRows = command.ExecuteNonQuery();
             if (addedRows > 0)
             {
-                Console.WriteLine("[DATABASE]:Projects:Create INSERTED");
+                Console.WriteLine("[DATABASE]:Roles:Create INSERTED");
             }
-            
+
             return addedRows > 0;
         }
         catch (Exception e)
         {
-            Console.WriteLine("[DATABASE]:Projects:Create ERROR: " + e.Message);
+            Console.WriteLine("[DATABASE]:Roles:Create ERROR: " + e.Message);
             return false;
         }
     }
 
-    public static void Update(Project project)
+    public static void Update(Role role)
     {
         try
         {
             var conn = ProjectsDatabase.Instance.Connection;
 
             using var command = new SqlCommand(
-                $"update Projects set title = '{project.Title}', description = '{project.Description}' where id = '{project.Id}'",
+                $"update Roles set name = '{role.Name}' where id = {role.Id}",
                 conn
             );
 
             var updatedRows = command.ExecuteNonQuery();
             if (updatedRows > 0)
             {
-                Console.WriteLine("[DATABASE]:Projects:Update UPDATED");
+                Console.WriteLine("[DATABASE]:Roles:Update UPDATED");
             }
         }
         catch (Exception e)
         {
-            Console.WriteLine("[DATABASE]:Projects:Update ERROR: " + e.Message);
+            Console.WriteLine("[DATABASE]:Roles:Update ERROR: " + e.Message);
         }
     }
-    
-    public static void Delete(Project project)
+
+    public static void Delete(Role role)
     {
         try
         {
             var conn = ProjectsDatabase.Instance.Connection;
 
             using var command = new SqlCommand(
-                $"delete from Projects where id = '{project.Id}'",
+                $"delete from Roles where id = {role.Id}",
                 conn
             );
 
             var deletedRows = command.ExecuteNonQuery();
             if (deletedRows > 0)
             {
-                Console.WriteLine("[DATABASE]:Projects:Delete DELETED");
+                Console.WriteLine("[DATABASE]:Roles:Delete DELETED");
             }
         }
         catch (Exception e)
         {
-            Console.WriteLine("[DATABASE]:Projects:Delete ERROR: " + e.Message);
+            Console.WriteLine("[DATABASE]:Roles:Delete ERROR: " + e.Message);
         }
     }
-    
-    public static Project? FindById(int id)
+
+    public static Role? FindById(int id)
     {
         try
         {
             var conn = ProjectsDatabase.Instance.Connection;
 
             using var command = new SqlCommand(
-                $"select id, title, description, created_date from Projects where id = '{id}'",
+                $"select id, name from Roles where id = {id}",
                 conn
             );
 
             using var reader = command.ExecuteReader();
             if (reader.Read())
             {
-                return new Project(
+                return new Role(
                     reader.GetString(1),
-                    reader.GetString(2),
-                    reader.GetDateTime(3),
                     reader.GetInt32(0)
                 );
             }
         }
         catch (Exception e)
         {
-            Console.WriteLine("[DATABASE]:Projects:FindByTitle ERROR: " + e.Message);
+            Console.WriteLine("[DATABASE]:Roles:FindById ERROR: " + e.Message);
         }
 
         return null;
     }
 
-    public static Project? FindByTitle(string title)
+    public static Role? FindByName(string name)
     {
         try
         {
             var conn = ProjectsDatabase.Instance.Connection;
 
             using var command = new SqlCommand(
-                $"select id, title, description, created_date from Projects where title = '{title}'",
+                $"select id, name from Roles where name = '{name}'",
                 conn
             );
 
             using var reader = command.ExecuteReader();
             if (reader.Read())
             {
-                return new Project(
+                return new Role(
                     reader.GetString(1),
-                    reader.GetString(2),
-                    reader.GetDateTime(3),
                     reader.GetInt32(0)
                 );
             }
         }
         catch (Exception e)
         {
-            Console.WriteLine("[DATABASE]:Projects:FindByTitle ERROR: " + e.Message);
+            Console.WriteLine("[DATABASE]:Roles:FindByName ERROR: " + e.Message);
         }
 
         return null;
     }
 
-    public static List<Project> List()
+    public static List<Role> List()
     {
         try
         {
             var conn = ProjectsDatabase.Instance.Connection;
 
             using var command = new SqlCommand(
-                "select p.id, p.title, p.description, p.created_date from Projects p",
+                "select id, name from Roles",
                 conn
             );
 
-            var reader = command.ExecuteReader();
+            using var reader = command.ExecuteReader();
+            var result = new List<Role>();
 
-            var result = new List<Project>();
             while (reader.Read())
             {
-                result.Add(new Project(
+                result.Add(new Role(
                     reader.GetString(1),
-                    reader.GetString(2),
-                    reader.GetDateTime(3),
                     reader.GetInt32(0)
                 ));
             }
-            
+
             return result;
         }
         catch (Exception e)
         {
-            Console.WriteLine("[DATABASE]:Projects:List ERROR: " + e.Message);
+            Console.WriteLine("[DATABASE]:Roles:List ERROR: " + e.Message);
             return [];
         }
     }
