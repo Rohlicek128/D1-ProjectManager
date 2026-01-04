@@ -2,7 +2,7 @@
 
 namespace ProjectManager.Database.Tables;
 
-public struct UserProject
+public class UserProject
 {
     public int Id { get; set; }
     public Project Project { get; set; }
@@ -15,6 +15,11 @@ public struct UserProject
         Project = project;
         User = user;
         Role = role;
+    }
+
+    public override string ToString()
+    {
+        return Id.ToString();
     }
 }
 
@@ -194,21 +199,49 @@ public static class UsersProjects
         {
             var conn = ProjectsDatabase.Instance.Connection;
 
-            using var command = new SqlCommand(
-                "select id, user_id, project_id, role_id from UsersProjects",
-                conn
-            );
+            using var command = new SqlCommand("""
+                                                   SELECT
+                                                       up.id,
+
+                                                       u.id, u.username, u.email, u.created_date,
+                                                       p.id, p.title, p.description, p.created_date,
+                                                       r.id, r.name
+                                                   FROM UsersProjects up
+                                                   JOIN Users u ON u.id = up.user_id
+                                                   JOIN Projects p ON p.id = up.project_id
+                                                   JOIN Roles r ON r.id = up.role_id
+                                               """, conn);
 
             using var reader = command.ExecuteReader();
             var result = new List<UserProject>();
 
             while (reader.Read())
             {
-                var user = Users.FindById(reader.GetInt32(1)) ?? new User("", "", DateTime.MinValue, -1);
-                var project = Projects.FindById(reader.GetInt32(2)) ?? new Project("", "", DateTime.MinValue);
-                var role = Roles.FindById(reader.GetInt32(3)) ?? new Role("", -1);
+                var user = new User(
+                    reader.GetString(2),
+                    reader.GetString(3),
+                    reader.GetDateTime(4),
+                    reader.GetInt32(1)
+                );
 
-                result.Add(new UserProject(project, user, role, reader.GetInt32(0)));
+                var project = new Project(
+                    reader.GetString(6),
+                    reader.GetString(7),
+                    reader.GetDateTime(8),
+                    reader.GetInt32(5)
+                );
+
+                var role = new Role(
+                    reader.GetString(10),
+                    reader.GetInt32(9)
+                );
+
+                result.Add(new UserProject(
+                    project,
+                    user,
+                    role,
+                    reader.GetInt32(0)
+                ));
             }
 
             return result;

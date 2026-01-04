@@ -16,6 +16,11 @@ public class User
         Email = email;
         CreatedDate = createdDate ?? DateTime.Now;
     }
+
+    public override string ToString()
+    {
+        return Username;
+    }
 }
 
 public static class Users

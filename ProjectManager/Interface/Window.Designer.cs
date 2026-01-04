@@ -48,6 +48,9 @@ partial class Window
         
         this._tabControl.TabPages.Add(new ProjectsTab());
         this._tabControl.TabPages.Add(new UsersTab());
+        this._tabControl.TabPages.Add(new RolesTab());
+        this._tabControl.TabPages.Add(new TasksTab());
+        this._tabControl.TabPages.Add(new UsersProjectsTab());
 
         this.Controls.Add(this._tabControl);
         

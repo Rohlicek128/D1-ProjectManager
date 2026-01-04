@@ -2,7 +2,7 @@
 
 namespace ProjectManager.Database.Tables;
 
-public struct Project
+public class Project
 {
     public int Id { get; set; }
     public string Title { get; set; }
@@ -15,6 +15,11 @@ public struct Project
         Title = title;
         Description = desc;
         CreatedDate = createdDate ?? DateTime.Now;
+    }
+
+    public override string ToString()
+    {
+        return Title;
     }
 }
 

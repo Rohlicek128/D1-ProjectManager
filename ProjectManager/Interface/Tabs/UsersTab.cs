@@ -1,12 +1,11 @@
 ﻿using ProjectManager.Database.Tables;
-using Timer = System.Windows.Forms.Timer;
 
 namespace ProjectManager.Interface.Tabs;
 
 public sealed class UsersTab : TabPage
 {
     private DataGridView _grid;
-    private BindingSource _userBinding = new();
+    private readonly BindingSource _userBinding = new();
     
     private TextBox _txtUsername;
     private TextBox _txtEmail;
@@ -81,19 +80,6 @@ public sealed class UsersTab : TabPage
         LoadUsers();
     }
 
-    private void UpdateUser(object? sender, EventArgs e)
-    {
-        if (_grid.SelectedRows.Count == 0)
-            return;
-        
-        var user = (User?)_grid.SelectedRows[0].DataBoundItem!;
-        if (!ValidateUser(user)) return;
-
-        Users.Update(user);
-        MessageBox.Show("User updated successfully.");
-        LoadUsers();
-    }
-
     private void DeleteUser(object? sender, EventArgs e)
     {
         var user = SelectedUser();
@@ -124,11 +110,12 @@ public sealed class UsersTab : TabPage
     {
         if (e.RowIndex < 0) return;
         var user = (User?)_grid.Rows[e.RowIndex].DataBoundItem!;
+        if (!ValidateUser(user)) return;
 
         try
         {
             Users.Update(user);
-            FlashEditableCells(e.RowIndex, Color.LightGreen);
+            Window.FlashEditableCells(_grid, e.RowIndex, Color.LightGreen);
         }
         catch (Exception ex)
         {
@@ -143,24 +130,5 @@ public sealed class UsersTab : TabPage
             
         _grid.Columns["Id"]?.DefaultCellStyle.BackColor = Color.LightGray;
         _grid.Columns["CreatedDate"]?.DefaultCellStyle.BackColor = Color.LightGray;
-    }
-
-    private void FlashEditableCells(int rowIndex, Color color, int interval = 1000)
-    {
-        foreach (DataGridViewCell cell in _grid.Rows[rowIndex].Cells)
-        {
-            if (!cell.OwningColumn!.ReadOnly) cell.Style.BackColor = color;
-        }
-        var timer = new Timer { Interval = interval };
-        timer.Tick += (_, _) =>
-        {
-            foreach (DataGridViewCell cell in _grid.Rows[rowIndex].Cells)
-            {
-                if (!cell.OwningColumn!.ReadOnly)
-                    cell.Style.BackColor = Color.White;
-            }
-            timer.Stop();
-        };
-        timer.Start();
     }
 }

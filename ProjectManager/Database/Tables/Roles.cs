@@ -2,7 +2,7 @@
 
 namespace ProjectManager.Database.Tables;
 
-public struct Role
+public class Role
 {
     public int Id { get; set; }
     public string Name { get; set; }
@@ -11,6 +11,11 @@ public struct Role
     {
         Id = id;
         Name = name;
+    }
+
+    public override string ToString()
+    {
+        return Name;
     }
 }
 
