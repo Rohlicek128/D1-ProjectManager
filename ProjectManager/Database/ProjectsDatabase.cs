@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using System.Configuration;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 
 namespace ProjectManager.Database;
@@ -12,7 +13,7 @@ public class ProjectsDatabase
             if (field == null) field = new ProjectsDatabase();
             return field;
         }
-    } = null!;
+    }
 
     private readonly string _connectionString;
     public SqlConnection Connection { get; }
@@ -46,14 +47,14 @@ public class ProjectsDatabase
         catch (SqlException e)
         {
             Console.WriteLine($"[DATABASE]:ConnectionString SQL Error: {e.Message}");
+            throw;
         }
         catch (Exception e)
         {
             Console.WriteLine($"[DATABASE]:ConnectionString ERROR: {e.Message}");
+            throw;
         }
-        
-        Environment.Exit(87); // ERROR_INVALID_PARAMETER
-        return null;
+        //Environment.Exit(87); // ERROR_INVALID_PARAMETER
     }
 
     private SqlConnection? GetConnection()
@@ -69,13 +70,12 @@ public class ProjectsDatabase
         catch (SqlException e)
         {
             Console.WriteLine($"[DATABASE]:Connection SQL Error: {e.Message}");
+            throw;
         }
         catch (Exception e)
         {
             Console.WriteLine($"[DATABASE]:Connection ERROR: {e.Message}");
+            throw;
         }
-
-        Environment.Exit(1);
-        return null;
     }
 }

@@ -1,4 +1,4 @@
-using ProjectManager.Database.Tables;
+using ProjectManager.Database;
 using ProjectManager.Interface;
 
 namespace ProjectManager;
@@ -8,21 +8,15 @@ internal static class Program
     [STAThread]
     private static void Main()
     {
-        //Users.Create(new User("Me", "me@mail.com"));
-        //Roles.Create(new Role("Developer"));
-        
-        //UsersProjects.Create(new UserProject(Projects.FindById(1).Value, Users.FindById(1).Value, Roles.FindById(1).Value));
-        foreach (var user in Users.List())
+        try
         {
-            Console.WriteLine("{0}, {1}, {2}, {3}", user.Username, user.Email, user.CreatedDate, user.Id);
+            var unused = ProjectsDatabase.Instance;
         }
-        foreach (var project in Projects.List())
+        catch (Exception e)
         {
-            Console.WriteLine("{0}, {1}, {2}, {3}", project.Id, project.Title, project.Description, project.CreatedDate);
+            MessageBox.Show($"Error: {e.Message}");
+            Environment.Exit(1);
         }
-        
-        
-        
         
         ApplicationConfiguration.Initialize();
         Application.Run(new Window());

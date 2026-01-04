@@ -1,6 +1,3 @@
-use ProjectManagement;
-
-
 -- Tables
 create table Projects(
     id int primary key identity(1,1),
