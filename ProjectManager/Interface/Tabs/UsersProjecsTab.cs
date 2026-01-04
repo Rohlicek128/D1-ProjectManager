@@ -16,7 +16,6 @@ public sealed class UsersProjectsTab : TabPage
     {
         Text = "Users + Projects";
         Initialize();
-        LoadLookups();
         LoadUserProjects();
     }
 
@@ -73,6 +72,7 @@ public sealed class UsersProjectsTab : TabPage
 
     private void LoadUserProjects()
     {
+        LoadLookups();
         _upBinding.DataSource = UsersProjects.List();
         _grid.DataSource = _upBinding;
     }

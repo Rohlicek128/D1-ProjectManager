@@ -21,7 +21,6 @@ public sealed class TasksTab : TabPage
     {
         Text = "Tasks";
         Initialize();
-        LoadLookups();
         LoadTasks();
     }
 
@@ -88,6 +87,7 @@ public sealed class TasksTab : TabPage
 
     private void LoadTasks()
     {
+        LoadLookups();
         _taskBinding.DataSource = Tasks.List();
         _grid.DataSource = _taskBinding;
     }
