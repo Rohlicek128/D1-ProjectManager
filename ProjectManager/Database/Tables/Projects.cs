@@ -2,12 +2,20 @@
 
 namespace ProjectManager.Database.Tables;
 
-public struct Project(string title, string desc, DateTime? createdDate = null, int id = -1)
+public struct Project
 {
-    public int Id = id;
-    public string Title = title;
-    public string Description = desc;
-    public DateTime CreatedDate = createdDate ?? DateTime.Now;
+    public int Id { get; set; }
+    public string Title { get; set; }
+    public string Description { get; set; }
+    public DateTime CreatedDate { get; set; }
+
+    public Project(string title, string desc, DateTime? createdDate = null, int id = -1)
+    {
+        Id = id;
+        Title = title;
+        Description = desc;
+        CreatedDate = createdDate ?? DateTime.Now;
+    }
 }
 
 public static class Projects
@@ -121,7 +129,7 @@ public static class Projects
             var conn = ProjectsDatabase.Instance.Connection;
 
             using var command = new SqlCommand(
-                $"select id, title, description, created_date from Projects where title = '{title}'",
+                $"select top 1 id, title, description, created_date from Projects where title = '{title}'",
                 conn
             );
 
@@ -155,7 +163,7 @@ public static class Projects
                 conn
             );
 
-            var reader = command.ExecuteReader();
+            using var reader = command.ExecuteReader();
 
             var result = new List<Project>();
             while (reader.Read())

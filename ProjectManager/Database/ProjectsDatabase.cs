@@ -5,42 +5,55 @@ namespace ProjectManager.Database;
 
 public class ProjectsDatabase
 {
-    private static ProjectsDatabase _instance;
     public static ProjectsDatabase Instance
     {
         get
         {
-            if (_instance == null) _instance = new ProjectsDatabase();
-            return _instance;
+            if (field == null) field = new ProjectsDatabase();
+            return field;
         }
-    }
-    
+    } = null!;
+
     private readonly string _connectionString;
     public SqlConnection Connection { get; }
 
     private ProjectsDatabase()
     {
-        _connectionString = GetConnectionString();
-        Console.WriteLine(_connectionString);
+        _connectionString = GetConnectionString()!;
         Connection = GetConnection()!;
     }
 
-    private string GetConnectionString()
+    private string? GetConnectionString()
     {
-        var config = new ConfigurationBuilder()
-            .SetBasePath(AppContext.BaseDirectory)
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            .Build();
-        
-        var builder = new SqlConnectionStringBuilder
+        try
         {
-            DataSource = config.GetConnectionString("Server"),
-            UserID = config.GetConnectionString("User"),
-            Password = config.GetConnectionString("Password"),
-            InitialCatalog = config.GetConnectionString("Database"),
-            TrustServerCertificate = true
-        };
-        return builder.ConnectionString;
+            var config = new ConfigurationBuilder()
+                .SetBasePath(AppContext.BaseDirectory)
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .Build();
+        
+            var builder = new SqlConnectionStringBuilder
+            {
+                DataSource = config.GetConnectionString("Server"),
+                UserID = config.GetConnectionString("User"),
+                Password = config.GetConnectionString("Password"),
+                InitialCatalog = config.GetConnectionString("Database"),
+                TrustServerCertificate = true
+            };
+            //Console.WriteLine(_connectionString);
+            return builder.ConnectionString;
+        }
+        catch (SqlException e)
+        {
+            Console.WriteLine($"[DATABASE]:ConnectionString SQL Error: {e.Message}");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"[DATABASE]:ConnectionString ERROR: {e.Message}");
+        }
+        
+        Environment.Exit(87); // ERROR_INVALID_PARAMETER
+        return null;
     }
 
     private SqlConnection? GetConnection()
@@ -55,13 +68,14 @@ public class ProjectsDatabase
         }
         catch (SqlException e)
         {
-            Console.WriteLine($"SQL Error: {e.Message}");
+            Console.WriteLine($"[DATABASE]:Connection SQL Error: {e.Message}");
         }
         catch (Exception e)
         {
-            Console.WriteLine(e.ToString());
+            Console.WriteLine($"[DATABASE]:Connection ERROR: {e.Message}");
         }
 
+        Environment.Exit(1);
         return null;
     }
 }

@@ -2,12 +2,20 @@
 
 namespace ProjectManager.Database.Tables;
 
-public struct User(string username, string email, DateTime? createdDate = null, int id = -1)
+public class User
 {
-    public int Id = id;
-    public string Username = username;
-    public string Email = email;
-    public DateTime CreatedDate = createdDate ?? DateTime.Now;
+    public int Id { get; set; }
+    public string Username { get; set; }
+    public string Email { get; set; }
+    public DateTime CreatedDate { get; set; }
+
+    public User(string username, string email, DateTime? createdDate = null, int id = -1)
+    {
+        Id = id;
+        Username = username;
+        Email = email;
+        CreatedDate = createdDate ?? DateTime.Now;
+    }
 }
 
 public static class Users

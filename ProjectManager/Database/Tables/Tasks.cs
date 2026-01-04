@@ -2,16 +2,28 @@
 
 namespace ProjectManager.Database.Tables;
 
-public struct Task(Project project, User user, string title, string desc, string status, string priority, bool completed, int id = -1)
+public struct Task
 {
-    public int Id = id;
-    public Project Project = project;
-    public User User = user;
-    public string Title = title;
-    public string Description = desc;
-    public string Status = status;
-    public string Priority = priority;
-    public bool Completed = completed;
+    public int Id { get; set; }
+    public Project Project { get; set; }
+    public User User { get; set; }
+    public string Title { get; set; }
+    public string Description { get; set; }
+    public string Status { get; set; }
+    public string Priority { get; set; }
+    public bool Completed { get; set; }
+
+    public Task(Project project, User user, string title, string desc, string status, string priority, bool completed, int id = -1)
+    {
+        Id = id;
+        Project = project;
+        User = user;
+        Title = title;
+        Description = desc;
+        Status = status;
+        Priority = priority;
+        Completed = completed;
+    }
 }
 
 public static class Tasks

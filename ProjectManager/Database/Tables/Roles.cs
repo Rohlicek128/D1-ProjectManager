@@ -2,10 +2,16 @@
 
 namespace ProjectManager.Database.Tables;
 
-public struct Role(string name, int id = -1)
+public struct Role
 {
-    public int Id = id;
-    public string Name = name;
+    public int Id { get; set; }
+    public string Name { get; set; }
+
+    public Role(string name, int id = -1)
+    {
+        Id = id;
+        Name = name;
+    }
 }
 
 public static class Roles

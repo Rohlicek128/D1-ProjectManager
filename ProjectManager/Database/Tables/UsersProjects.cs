@@ -2,12 +2,20 @@
 
 namespace ProjectManager.Database.Tables;
 
-public struct UserProject(Project project, User user, Role role, int id = -1)
+public struct UserProject
 {
-    public int Id = id;
-    public Project Project = project;
-    public User User = user;
-    public Role Role = role;
+    public int Id { get; set; }
+    public Project Project { get; set; }
+    public User User { get; set; }
+    public Role Role { get; set; }
+
+    public UserProject(Project project, User user, Role role, int id = -1)
+    {
+        Id = id;
+        Project = project;
+        User = user;
+        Role = role;
+    }
 }
 
 public static class UsersProjects

@@ -1,7 +1,11 @@
-﻿namespace ProjectManager.Interface;
+﻿using ProjectManager.Interface.Tabs;
+
+namespace ProjectManager.Interface;
 
 partial class Window
 {
+    private TabControl _tabControl;
+    
     /// <summary>
     ///  Required designer variable.
     /// </summary>
@@ -20,6 +24,16 @@ partial class Window
 
         base.Dispose(disposing);
     }
+    
+    private void SetAllControlsFont(Control.ControlCollection ctrls)
+    {
+        foreach(Control ctrl in ctrls)
+        {
+            if(ctrl.Controls != null)
+                SetAllControlsFont(ctrl.Controls);
+            ctrl.Font = new Font("Roboto", ctrl.Font.Size + 3);
+        }
+    }
 
     #region Windows Form Designer generated code
 
@@ -29,6 +43,16 @@ partial class Window
     /// </summary>
     private void InitializeComponent()
     {
+        this._tabControl = new TabControl();
+        this._tabControl.Dock = DockStyle.Fill;
+        
+        this._tabControl.TabPages.Add(new ProjectsTab());
+        this._tabControl.TabPages.Add(new UsersTab());
+
+        this.Controls.Add(this._tabControl);
+        
+        SetAllControlsFont(this.Controls);
+        
         SuspendLayout();
         // 
         // Form1
