@@ -4,7 +4,7 @@ Uses `Microsoft SQL Server` and for the user interface uses `WinForms`.
 <img src="Resources/app.png" alt="Application" width="450"/>
 
 # Dependencies
-- `.NET 10.0`
+- `.NET 10.0 Desktop Runtime`
 - `MSSQL` - Microsoft SQL Server
 
 # How to Run
