@@ -1,10 +1,10 @@
 ﻿# PROJECT MANAGER
-Application for managing projects and tasks written in `C# 14` (`.NET 10.0`).
+Application for managing projects and tasks written in `C# 13` (`.NET 9.0`).
 Uses `Microsoft SQL Server` and for the user interface uses `WinForms`.
-<img src="resources/app.png" alt="Input Image" width="450"/>
+<img src="Resources/app.png" alt="Application" width="450"/>
 
 # Dependencies
-- `.NET 10.0`
+- `.NET 9.0`
 - `MSSQL` - Microsoft SQL Server
 
 # How to Run
@@ -29,7 +29,7 @@ You need a Microsoft SQL Server for the database.
 Uses Microsoft SQL Server.
 
 ### Diagram
-![cockpit screenshot](Resources/diagram.png)
+<img src="Resources/diagram.png" alt="ER Diagram" width="400"/>
 
 ## Used Libraries
 - WinForms

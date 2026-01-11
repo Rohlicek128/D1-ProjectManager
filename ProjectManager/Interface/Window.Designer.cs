@@ -1,4 +1,5 @@
 ﻿using ProjectManager.Interface.Tabs;
+using ProjectManager.Interface.Tabs.Views;
 
 namespace ProjectManager.Interface;
 
@@ -51,6 +52,7 @@ partial class Window
         this._tabControl.TabPages.Add(new RolesTab());
         this._tabControl.TabPages.Add(new TasksTab());
         this._tabControl.TabPages.Add(new UsersProjectsTab());
+        this._tabControl.TabPages.Add(new ViewsTab());
 
         this.Controls.Add(this._tabControl);
         
